@@ -9,10 +9,9 @@ import java.util.List;
 
 public class ImageHtmlGenerator {
     public static void imageHtmlGenerator(String args) {
-        // Listába kiíratja a fő- és annak a gyökérkönyvtárainak a nevét
-        File path = new File("D:/project_images");
+    // Használd a paraméterként kapott útvonalat a hardkódolt helyett
+        File path = new File(args);
         List<String> directoryPaths = DirectoryPathLister.filePathLister(path);
-        directoryPaths.add(args);
 
         // Végigmegy az összes könyvtáron, és az abban található összes képnek csinál egy azonos nevű .html kiterjesztésű fájlt
         for (String directoryPath : directoryPaths) {
