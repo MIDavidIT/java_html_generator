@@ -3,45 +3,74 @@ package html_generator;
 import java.io.*;
 import java.util.List;
 
-public class index {
-    public static void main(String[] args) {
-        String fileName = "index.html";
-        String filePath = "D:\\project_images/";
+public class IndexHtmlGenerator {
+    public static void htmlGenerator(String args) {
+        // Listába kiíratja a fő- és annak a gyökérkönyvtárainak a nevét
+        File path = new File("D:/project_images");
+        List<String> directoryPaths = DirectoryPathLister.filePathLister(path);
+        directoryPaths.add(args);
 
-        File htmlFile = new File(filePath + fileName);
+        // Végigmegy az összes könyvtáron, és mindegyikbe legenerál egy index.html fájlt
+        for (String directoryPath : directoryPaths) {
+            String fileName = "index.html";
+            String filePath = directoryPath + "/";
 
-        System.out.println("Az " + fileName + " fájl létrhozva a következő elérési úton: " + htmlFile.getAbsolutePath());
+            // Legenerálom a File-t az elérési útból és a névből
+            File htmlFile = new File(filePath + fileName);
 
+            // Kiírja, hogy melyik könyvtárba generált le index.html fájlt
+            System.out.println("Az " + fileName + " fájl létrehozva a következő elérési úton: " + htmlFile.getAbsolutePath());
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(htmlFile))){
-            writer.write("<!DOCTYPE html>");
-            writer.write("<html>");
-            writer.write("<head>");
-            writer.write("<title>Projektfeladat - Java</title>");
-            writer.write("</head>");
+            // Mik kerülnek az index.html-be
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(htmlFile))){
+                writer.write("<!DOCTYPE html>");
+                writer.write("<html>");
+                writer.write("<head>");
 
-            writer.write("<body>");
-            writer.write("<a href=\"file:///D:/project_images/index.html\"><h1>Kezdőlap</h1></a>");
-            writer.write("<hr>");
-            writer.write("<h1>Könyvtárak:</h1>");
+                // Oldal címe
+                writer.write("<title>Projektfeladat - Java</title>");
 
-            // Nem ez a végleges
-            writer.write("<h2>&#x2022;American</h2>");
-            writer.write("<h2>&#x2022;Brazilian</h2>");
-            writer.write("<h2>&#x2022;British</h2>");
-            writer.write("<h2>&#x2022;Hungarian</h2>");
-            writer.write("<h2>&#x2022;Italian</h2>");
-            writer.write("<h2>&#x2022;Russian</h2>");
-            writer.write("<h2>&#x2022;Sweedish</h2>");
+                writer.write("</head>");
+                writer.write("<body style=\"background-color:#D3D3D3;\">");
 
+                // Kezdőlap gomb, ami a gyökérkönyvtárban található index.html-re visz
+                writer.write("<h1><a href=\"/project_images/index.html\">Kezdőlap</a></h1>");
 
-            writer.write("<hr>");
-            writer.write("<h1>Képek:</h1>");
+                writer.write("<hr>"); // Aláhúzás
 
-            writer.write("</body>");
-            writer.write("</html>");
-        } catch (IOException e) {
-            e.printStackTrace();
+                writer.write("<h1>Könyvtárak:</h1>");
+
+                // Visszagomb, ami visszavisz az adott könyvtár szülőmappájában lévő index.html-re
+                File mother = new File(directoryPath);
+                if (!(mother.getAbsolutePath().equals("D:\\project_images"))) {
+                    writer.write("<p><a href=\"" + mother.getParentFile().getAbsolutePath() + "/index.html\"><<<</a></p>");
+                }
+
+                // Könyvtárnevek kiíratása és kattinthatóvá tétele.
+                // Rákattintva átírányít az adott könyvtár index.html-jére
+                List<String> directoryNames = DirectoryNameLister.fileNameLister(directoryPath);
+                for (String directoryName : directoryNames) {
+                    writer.write("<p><a href=\"" + directoryName + "/index.html\">" + directoryName + "</a></p>");
+                }
+
+                writer.write("<hr>"); // Aláhuzás
+
+                writer.write("<h1>Képek:</h1>");
+
+                // Képnevek kiíratása és kattinhatóvá tétele.
+                // Rákattintva átírányít az adott kép .html-jére
+                List<String> imageNames = ImageNameLister.imageNameLister(directoryPath);
+                for (String imageName : imageNames) {
+                    int dotIndex = imageName.lastIndexOf(".");
+                    String imageNameOut = imageName.substring(0,dotIndex) + ".html";
+                    writer.write("<p><a href=\"" + imageNameOut + "\">"+ imageName + "</a></p>");
+                }
+
+                writer.write("</body>");
+                writer.write("</html>");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -4,18 +4,30 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageHtmlGenerator {
-    public static List<String> imageNameLister() {
-        String folderPath = "D:\\project_images";
-        File image = new File(folderPath);
+public class ImageNameLister {
+    public static List<String> imageNameLister(String directoryPath) {
+
+        // Csinálok egy új File-t az átadott elérési útvonalból
+        File image = new File(directoryPath);
+
+        // Csinálok egy String listát, amibe el akarom tárolni a képek neveit és kiterjesztésüket
         List<String> imageNames = new ArrayList<>();
 
+        // Megnézi, hogy az adott File létezik-e és, hogy mappa-e
         if (image.exists() && image.isDirectory()) {
+
+            // Ha igaz, akkor egy File tömbbe elmenti a főkönytárban található összes mappa nevét
             File[] names = image.listFiles();
 
+            // Megnézi, hogy a tömb üres-e
             if (names != null) {
+
+                // Ha nem, akkor végigmegy a fájlok nevein
                 for (File name : names) {
-                    if (!(name.isDirectory()) && !(name.getName().equals("index.html"))) {
+
+                    // Ha a fájlok nem könyvtárok && nem az a nevük, hogy html_deleter.bat && nem .html-re végződnek,
+                    // akkor az imageNames listába beleteszi a nevüket, majd ha mindennel végez, akkor visszaadja azt a listát
+                    if (!(name.isDirectory()) && !(name.getName().equals("html_deleter.bat")) && !(name.getName().endsWith(".html"))) {
                         imageNames.add(name.getName());
                     }
                 }

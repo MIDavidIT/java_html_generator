@@ -5,36 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DirectoryPathLister {
-    public static void filePathNameLister() {
-        String folderPath = "D:\\project_images";
-        File folder = new File(folderPath);
+    public static List<String> filePathLister(File path) {
+        File dir = new File(String.valueOf(path));
+        List<String> paths = new ArrayList<>();
 
-        if (folder.exists() && folder.isDirectory()) {
-            List<String> filePaths = new ArrayList<>();
-            List<String> fileNames = new ArrayList<>();
-            File[] files = folder.listFiles();
+        // Ellenőrizze, hogy a bemeneti objektum egy könyvtár-e
+        if (path.isDirectory()) {
+            paths.add(path.getAbsolutePath());
 
+            // Listázza a könyvtárban lévő fájlokat és alkönyvtárakat
+            File[] files = dir.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    if (file.isDirectory()) {
-                        fileNames.add(file.getName());
-                        filePaths.add(file.getAbsolutePath());
-                    }
+                    // Rekurzív hívás az alkönyvtárakra, és hozzáadja az eredményeket a listához
+                    paths.addAll(filePathLister(file));
                 }
-
-                for (String fileName : fileNames) {
-                    System.out.println(fileName);
-                }
-
-                for (String filePath : filePaths) {
-                    System.out.println(filePath);
-                }
-
-            } else  {
-                System.out.println("A mappa üres");
             }
-        } else {
-            System.out.println("A megadott elérési út nem egy mappa, vagy nem létezik");
         }
+        return paths;
     }
 }
