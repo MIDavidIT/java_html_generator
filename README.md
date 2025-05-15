@@ -3,7 +3,7 @@ A kód rekurzív, szóval a project_images nevű könytárban található alkön
 
 A project_images mappában még megtalálható egy html_deleter.bat fájl, ami kitörli a mappában megtalálható összes .html fájlt.
 
-Windows futtatási útmutató: (navigáljunk abba a mappába, ahol megtalálható az src)
+Futtatási útmutató: (navigáljunk abba a mappába, ahol megtalálható az src)
 Fordítás: javac -d bin src/html_generator/*.java
 Futtatás: java -cp bin html_generator.Main "project_images elérési útja"
 
